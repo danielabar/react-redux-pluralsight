@@ -1,3 +1,26 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
+
+- [Building Applications with React and Redux in ES6](#building-applications-with-react-and-redux-in-es6)
+  - [Environment Setup](#environment-setup)
+    - [Hot Reloading](#hot-reloading)
+    - [Project setup](#project-setup)
+    - [ESLint](#eslint)
+    - [Parallel Scripts](#parallel-scripts)
+    - [Testing](#testing)
+  - [React Component Approaches](#react-component-approaches)
+    - [Ways to Create Components](#ways-to-create-components)
+    - [ES5 createClass](#es5-createclass)
+- [Hello World](#hello-world)
+- [Hello World](#hello-world-1)
+- [Hello World](#hello-world-2)
+    - [React in ES2015](#react-in-es2015)
+    - [ES5 Stateless Functional Component](#es5-stateless-functional-component)
+    - [ES2015 Stateless Functional Component](#es2015-stateless-functional-component)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Building Applications with React and Redux in ES6
 
 > Learning React and Redux with [Pluralsight course](https://app.pluralsight.com/library/courses/react-redux-react-router-es6/exercise-files)
@@ -141,3 +164,78 @@ Note that tests are placed in the same directory as source:
 Run tests with `npm test`.
 
 Mocha doesn't come with assertion library, will be using `expect` from npm.
+
+## React Component Approaches
+
+### Ways to Create Components
+
+* ES5 createClass
+* ES2015 class (used in this course)
+* ES5 stateless function
+* ES2015 stateless function (used in this course )
+* more...
+
+### ES5 createClass
+
+```javascript
+var HelloWorld = React.createClass({
+  render: function() {
+    return (
+      <h1>Hello World</h1>
+    );
+  }
+});
+```
+
+### React in ES2015
+
+The ES5 class auto binds functions to the component's `this` context. But react components built with ES2016 classes do *not* auto bind.
+
+```javascript
+// Works fine with ES5 createClass
+<div onClick={this.handleClick}></div>
+
+// Requires explicit bind wiht ES2015 class
+<div onClick={this.handleClick.bind(this)}></div>
+```
+
+For performance reasons, better to bind in constructor:
+
+```javascript
+class Contacts extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this);
+  }
+}
+```
+
+PropTypes and default props declared separately below class definition.
+
+Set initial state in constructor.
+
+### ES5 Stateless Functional Component
+
+Have no state and get their data from props. Simpler syntax, just define a function with props as argument. React assumes the return is the render function:
+
+```javascript
+var HelloWorld = function(props) {
+  return (
+    <h1>Hello World</h1>
+  );
+}
+```
+
+Good choice if component doesn't need to manage state, use lifecycle methods or do performance optimizations.
+
+### ES2015 Stateless Functional Component
+
+Note use of `const` instead of `var`.
+
+```javascript
+const HelloWorld = (props) => {
+  return (
+    <h1>Hello World</h1>
+  );
+}
+```
