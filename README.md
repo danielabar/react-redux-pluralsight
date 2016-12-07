@@ -18,6 +18,7 @@
     - [React in ES2015](#react-in-es2015)
     - [ES5 Stateless Functional Component](#es5-stateless-functional-component)
     - [ES2015 Stateless Functional Component](#es2015-stateless-functional-component)
+    - [When to use Stateless vs Class](#when-to-use-stateless-vs-class)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -230,8 +231,6 @@ Good choice if component doesn't need to manage state, use lifecycle methods or 
 
 ### ES2015 Stateless Functional Component
 
-Note use of `const` instead of `var`.
-
 ```javascript
 const HelloWorld = (props) => {
   return (
@@ -239,3 +238,19 @@ const HelloWorld = (props) => {
   );
 }
 ```
+
+* use of `const` instead of `var`, to ensure component is never re-assigned
+* use of arrow function
+
+![Class vs Stateless](doc-images/class-vs-stateless.png "Class vs Stateless")
+
+**Benefits**
+
+* No class needed
+* Avoid `this` keyword
+* Enforced best practices, not possible to hack in state that should be in higher level container component
+* High signal-to-noise ratio (less code to write therefore less noise)
+* Easy to understand (its just a function that takes props and returns markup)
+* Easy to test (no mocking or state manipulation required to setup tests)
+
+### When to use Stateless vs Class
