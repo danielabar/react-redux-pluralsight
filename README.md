@@ -19,6 +19,7 @@
     - [ES5 Stateless Functional Component](#es5-stateless-functional-component)
     - [ES2015 Stateless Functional Component](#es2015-stateless-functional-component)
     - [When to use Stateless vs Class](#when-to-use-stateless-vs-class)
+    - [Other Ways to Create Components](#other-ways-to-create-components)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -254,3 +255,12 @@ const HelloWorld = (props) => {
 * Easy to test (no mocking or state manipulation required to setup tests)
 
 ### When to use Stateless vs Class
+
+Use stateless whenever possible, unless you need:
+
+* Local state
+* Refs - reference to underlying DOM (because stateless component does not create component instance, therefore Ref will return null)
+* Lifecycle methods (eg: component will mount, component did mount, etc.)
+* Child functions (otherwise nesting functions in stateless component is bad for performance, because every render creates a new instance of that function)  
+
+### Other Ways to Create Components
