@@ -20,6 +20,7 @@
     - [ES2015 Stateless Functional Component](#es2015-stateless-functional-component)
     - [When to use Stateless vs Class](#when-to-use-stateless-vs-class)
     - [Other Ways to Create Components](#other-ways-to-create-components)
+    - [Container vs Presentation Components](#container-vs-presentation-components)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -264,3 +265,39 @@ Use stateless whenever possible, unless you need:
 * Child functions (otherwise nesting functions in stateless component is bad for performance, because every render creates a new instance of that function)  
 
 ### Other Ways to Create Components
+
+* Object.create
+* Mixins
+* Parasitic Components
+* StampIt
+
+### Container vs Presentation Components
+
+__Container__
+
+* Little to no markup
+* Concerned with behaviour, marshalling data, passing data down to their children, and actions
+* "Back end to the front end" (components don't have to emit DOM)
+* Often stateful
+* Created with Redux's `connect` function (if using Redux)
+* Know about Redux, have Redux specific code for dispatching actions to store and connecting to store
+
+**Presentation**
+
+* Nearly all markup
+* Dumb (no logic)
+* Receive data and actions via props (from a container component), relies on these props to display UI
+* Doesn't know about Redux (makes component re-usable and easier to understand), no dependencies on rest of app such as Redux or Stores.
+* Don't specify how data is loaded or mutated.
+* Typically stateless functional components.
+
+Try to make most components Presentation.
+
+**Alternative Jargon**
+
+* Container / Presentational
+* Smart / Dumb
+* Stateful / Stateless
+* Controller View / View
+
+"When you notice that some components don't use props they receive but merely forward them down... it's a good time to introduce some container components." --Dan Abramov
