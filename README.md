@@ -301,3 +301,9 @@ Try to make most components Presentation.
 * Controller View / View
 
 "When you notice that some components don't use props they receive but merely forward them down... it's a good time to introduce some container components." --Dan Abramov
+
+## Initial App Structure
+
+Convention to keep all components togehter in a `components` folder. Optionally can organize components for each page in a sub-folder under components.
+
+Convention to name components with initial cap, eg [AboutPage.js](src/components/about/AboutPage.js).
