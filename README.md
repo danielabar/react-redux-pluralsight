@@ -37,6 +37,7 @@
     - [Container vs Presentational Components](#container-vs-presentational-components)
     - [React-redux Intro](#react-redux-intro)
     - [A Chat With Redux](#a-chat-with-redux)
+  - [Redux Flow](#redux-flow-1)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -755,3 +756,11 @@ Benefit to Options 2/3 - child components don't know about redux.
 How all the pieces interact to flow data through the app
 
 ![Redux Chat](doc-images/redux-chat.png "Redux Chat")
+
+## Redux Flow
+
+Do function binding in constructor rather than props for performance (because bind returns a new function, don't want to do that on every render). For example, `this.onTitleChange = this.onTitleChange.bind(this);`
+
+Need a [root reducer](src/reducers/index.js). Defines all reducers that form the application.
+
+Create the [store](src/configureStore.js).
