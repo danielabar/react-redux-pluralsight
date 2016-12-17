@@ -22,6 +22,10 @@
     - [Other Ways to Create Components](#other-ways-to-create-components)
     - [Container vs Presentation Components](#container-vs-presentation-components)
   - [Initial App Structure](#initial-app-structure)
+  - [Intro to Redux](#intro-to-redux)
+    - [Do I need Redux?](#do-i-need-redux)
+    - [Core Redux Principles](#core-redux-principles)
+    - [Redux Flow](#redux-flow)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -337,4 +341,73 @@ To use it in [App.js](src/components/App.js), import it and use it as `<Header/>
 
 **Create Course Page**
 
-Building an app to administer courses for a training company.
+[CoursePage.js](src/components/course/CoursesPage.js) Building an app to administer courses for a training company.
+
+## Intro to Redux
+
+### Do I need Redux?
+
+![Do I need Redux?](doc-images/do-i-need-redux.png "Do I need Redux?")
+
+Depends on complexity of app. For simple, probably not. But as data flows get more complex, large number of state changes to manage. May want to manage all state changes in a single spot for maintainability and testability.
+
+**When Do I Need Redux?**
+
+* Complex data flows
+* Inter-component communication
+* Non-hierarchical data
+* Many actions
+* Same data used in multiple places
+
+"...If you aren't sure if you need it, you don't need it." --Pete Hunt on Flux and Redux
+
+For example, if have multiple components (that are not in a parent-child relationship), that need to manipulate the same data, how to ensure the data stays in sync?
+
+Redux solution is to use a centralized `Store` (like a local client side database).
+
+Components dispatch `Action`s that will update the single `Store`.
+
+Once components are connected to the store, they're notified of data changes.
+
+### Core Redux Principles
+
+**One immutable store**
+
+All application state is placed in a single immutable store. Supports debugging, server-side rendering, and makes undo/redo simple.
+
+**Actions trigger changes**
+
+The only way to mutate state is to emit an action. Action describes users intent. Eg: user clicks submit contact form button, triggers submit contact form action.
+
+**Reducers update state**
+
+State is changed by pure functions, called `reducer`s. Reducer is function that accepts current state in an action and returns new state.
+
+**Containers**
+
+Container components (regular react components but specialized use within redux) contain logic for marshalling data and actions, which are passed down to dumb components via `props`.
+
+### Redux Flow
+
+Actions, the Store, Reducers and container components will interact to create uni-directional data flow.
+
+![Redux Flow](doc-images/redux-flow.png "Redux Flow")
+
+Actions describe user intent, an object with a type property and some data that can be anything. Only requirement is it must have a type, eg: `{type: RATE_COURSE, rating: 4}`.
+
+Action will be handled by reducer, a function that receives current state and action, then returns new state.
+
+```javascript
+function appReducer(state = defaultState, action) {
+  switch(action.type) {
+    case RATE_COURSE:
+      // return new state
+    case SOME_OTHER_ACTION:
+      ...
+  }
+}
+```
+
+After new state is returned from reducer, Store is updated. React re-renders any components that are using that data.
+
+React components are connected to Store via `react-redux`. 
