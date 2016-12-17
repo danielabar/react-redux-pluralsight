@@ -26,6 +26,13 @@
     - [Do I need Redux?](#do-i-need-redux)
     - [Core Redux Principles](#core-redux-principles)
     - [Redux Flow](#redux-flow)
+  - [Redux Core - Deeper Dive](#redux-core---deeper-dive)
+    - [Actions](#actions)
+    - [Store](#store)
+    - [What is Immutability](#what-is-immutability)
+    - [Why Immutability?](#why-immutability)
+    - [Handling Immutability](#handling-immutability)
+    - [Reducers](#reducers)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -410,4 +417,174 @@ function appReducer(state = defaultState, action) {
 
 After new state is returned from reducer, Store is updated. React re-renders any components that are using that data.
 
-React components are connected to Store via `react-redux`. 
+React components are connected to Store via `react-redux`.
+
+## Redux Core - Deeper Dive
+
+### Actions
+
+Events happening in application are called Actions. Plain objects containing description of event.
+
+Action must have `type` property, rest can be any serializable value (string, boolean, object etc). Don't put non-serializable data in action (eg: function, promise).
+
+Actions are created by convenience functions "Action Creators",for example `rateCourse` below:
+
+```javascript
+rateCourse(rating) {
+  return { type: RATE_COURSE, rating: rating } // this line is the plain object
+}
+```
+
+By convention, action creator has same name as type.
+
+### Store
+
+Single source of truth makes app easier to manage and understand. Store created in app entry point:
+
+```javascript
+let store = createStore(reducer);
+```
+
+Store api (note no api for changing data in store). Only way to change data in store is to dispatch an action.
+
+`store.dispatch(action)`
+
+`store.subscribe(listener)`
+
+`store.getState()`
+
+`replaceReducer(nextReducer)`
+
+Store does not handle actions that are dispatched. Actions are handled by reducers.
+
+### What is Immutability
+
+To change state, return a new object.
+
+Some types in JS already immutable (every time value is changed, new copy is created):
+
+* Number
+* String
+* Boolean
+* Undefined
+* Null
+
+But these are mutable:
+
+* Objects
+* Arrays
+* Functions
+
+**Example**
+
+Current state
+
+```javascript
+state = {
+  name: 'Cory House',
+  role: 'author'
+}
+```
+
+Traditional app mutates state
+
+```javascript
+state.role = 'admin';
+return state;
+```
+
+Not mutating state, returning new object
+
+```javascript
+return state = {
+  name: 'Cory House',
+  role: 'admin'
+}
+```
+
+**Creating Copies in Javascript**
+
+`assign` is new method on `Object` (ES2015).
+
+`Object.assign(target, ...sources)`
+
+Creates a new object, using existing objects as a template. First argument is target object, then pass in as many source objects as needed.
+
+Example, start with new empty object, then "mixin" existing state, and desired state modification:
+
+`Object.assign({}, state, {role: 'admin'})`
+
+***Always pass empty object as first parameter to avoid mutating state!***
+
+### Why Immutability?
+
+**Clarity**
+
+With mutable state, its difficult to trace through the code and figure out where/when something changed. With Redux, the answer is always "in the reducer". Makes debugging easier.
+
+**Performance**
+
+With a large number of properties on state object, would be expensive to have to check if each has changed. But with immutability, redux can simply do a reference comparison `if (prevStoreState !== storeState) ...`, efficient.
+
+`react-redux` uses the comparison to determine when to notify react of state changes.
+
+**Amazing Debugging**
+
+Time travel debugging, via Redux DevTools.
+
+### Handling Immutability
+
+ES2015: `Object.assign`, Spread operator (for arrays).
+
+ES5: Lodash merge, Lodash extend, Object-assign from npm.
+
+Libraries: react-addons-update, Immutable.js
+
+**Enforcing Immutability**
+
+On a small team, educate the devs and hope everyone remembers. Otherwise...
+
+redux-immutable-state-invariant: library displays error if attempt to mutate state. But only run in development.
+
+Immutable.js: library to programmatically enforce immutablity.
+
+### Reducers
+
+To change store, dispatch an action that is ultimately handled by a reducer. Take in state and action and return new state.
+
+```javascript
+function myReducer(state, action) {
+  // Return new state based on action passed
+}
+```
+
+Example:
+
+```javascript
+function myReducer(state, action) {
+  switch(action.type) {
+    case 'INCREMENT_COUNTER':
+      return Object.assign(
+        {},
+        state,
+        {counter: state.counter + 1}
+      );
+  }
+}
+```
+
+Reducers must be *pure functions*, no side effects. i.e. calling it with same arguments always returns same value. Return value should depend *solely* on its arguments.
+
+**Forbidden in Reducers**
+
+* Mutate arguments
+* Perform side effects (api calls, route transitions)
+* Call non-pure functions
+
+***All*** reducers are called on each dispatch. That's why each reducer has a case/switch for action type. If no action type matches, return untouched state.
+
+Each reducer is only passed its slice of state.
+
+There is NOT a 1-1 mapping between reducer and action:
+
+"Write independent small reducer functions that are each responsible for updates to a specific slice of state. This pattern is 'reducer composition'. A given action could be handled by all, some, or none of them." --Redux FAQ
