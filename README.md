@@ -21,6 +21,9 @@
     - [When to use Stateless vs Class](#when-to-use-stateless-vs-class)
     - [Other Ways to Create Components](#other-ways-to-create-components)
     - [Container vs Presentation Components](#container-vs-presentation-components)
+  - [Initial App Structure](#initial-app-structure)
+    - [Create Initial Components](#create-initial-components)
+    - [Create App Layout](#create-app-layout)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -304,6 +307,12 @@ Try to make most components Presentation.
 
 ## Initial App Structure
 
-Convention to keep all components togehter in a `components` folder. Optionally can organize components for each page in a sub-folder under components.
+### Create Initial Components
 
-Convention to name components with initial cap, eg [AboutPage.js](src/components/about/AboutPage.js).
+Convention to keep all components together in a `components` folder. Optionally can organize components for each page in a sub-folder under components.
+
+Convention to name components with initial cap, eg [AboutPage.js](src/components/about/AboutPage.js), [HomePage.js](src/components/home/HomePage.js).
+
+### Create App Layout
+
+Parent component for markup to be displayed on every page such as header or footer. It wraps the other components. [app.js](src/components/App.js).
