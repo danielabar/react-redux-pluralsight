@@ -2,12 +2,13 @@
 // React router passes in child components as properties onto this app component.
 // They will be composed here on the page.
 import React, {PropTypes} from 'react';
+import Header from './common/Header';
 
 class App extends React.Component {
   render() {
     return (
       <div className="container-fluid">
-        <p>Header here...</p>
+        <Header/>
         {this.props.children}
       </div>
     );

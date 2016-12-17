@@ -22,8 +22,6 @@
     - [Other Ways to Create Components](#other-ways-to-create-components)
     - [Container vs Presentation Components](#container-vs-presentation-components)
   - [Initial App Structure](#initial-app-structure)
-    - [Create Initial Components](#create-initial-components)
-    - [Create App Layout](#create-app-layout)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -307,12 +305,36 @@ Try to make most components Presentation.
 
 ## Initial App Structure
 
-### Create Initial Components
+**Create Initial Components**
 
 Convention to keep all components together in a `components` folder. Optionally can organize components for each page in a sub-folder under components.
 
 Convention to name components with initial cap, eg [AboutPage.js](src/components/about/AboutPage.js), [HomePage.js](src/components/home/HomePage.js).
 
-### Create App Layout
+**Create App Layout**
 
 Parent component for markup to be displayed on every page such as header or footer. It wraps the other components. [app.js](src/components/App.js).
+
+**Configure Routing**
+
+Use react router to navigate between pages. [routes.js](src/routes.js) is placed at root of `src` dir.
+
+`IndexRoute` from `react-router` is used when there is just a root path.
+
+**Update Entry Point**
+
+App entry point is [index.js](src/index.js). Update it to use react router.
+
+**Create Styles**
+
+[styles.css](src/styles/styles.css) Note use of webpack to load styles.
+
+**Create Header**
+
+[Header.js](src/components/common/Header.js) - statless functional component.
+
+To use it in [App.js](src/components/App.js), import it and use it as `<Header/>`.
+
+**Create Course Page**
+
+Building an app to administer courses for a training company.
