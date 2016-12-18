@@ -22,6 +22,7 @@
     - [Other Ways to Create Components](#other-ways-to-create-components)
     - [Container vs Presentation Components](#container-vs-presentation-components)
   - [Initial App Structure](#initial-app-structure)
+- [Courses](#courses)
   - [Intro to Redux](#intro-to-redux)
     - [Do I need Redux?](#do-i-need-redux)
     - [Core Redux Principles](#core-redux-principles)
@@ -38,6 +39,8 @@
     - [React-redux Intro](#react-redux-intro)
     - [A Chat With Redux](#a-chat-with-redux)
   - [Redux Flow](#redux-flow-1)
+    - [Container Component Structure](#container-component-structure)
+  - [Add Course](#add-course)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -764,3 +767,112 @@ Do function binding in constructor rather than props for performance (because bi
 Need a [root reducer](src/reducers/index.js). Defines all reducers that form the application.
 
 Create the [store](src/configureStore.js).
+
+To hook up an existing component to work with redux, use `connect` function from `react-redux`:
+
+```javascript
+import {connect} from 'react-redux';
+```
+
+Then export component decorated by react-redux `connect` function:
+
+```javascript
+export default connect(mapStateToProps, mapDispatchToProps)(CoursesPage);
+```
+
+`connect` function creates components that can interact with Redux, i.e. *container components*.
+
+re: double set of parens - two function calls, `connect` returns a function, which is then invoked with `CoursePage` (the container component) as parameter.
+
+### Container Component Structure
+
+[Example](src/components/course/CoursesPage.js)
+
+**Constructor**
+
+Initialize state and bind any functions that need this context:
+
+```javascript
+constructor(props, context) {
+  super(props, context);
+  this.state = {
+    course: {title: ''}
+  };
+
+  this.onTitleChange = this.onTitleChange.bind(this);
+  this.onClickSave = this.onClickSave.bind(this);
+}
+```
+
+**Child Functions**
+
+Child functions called by render, either as part of rendering of when user clicks on something:
+
+```javascript
+onTitleChange(event) {
+  const course = this.state.course;
+  course.title = event.target.value;
+  this.setState({course: course});
+}
+
+onClickSave() {
+  this.props.actions.createCourse(this.state.course);
+}
+
+courseRow(course, index) {
+  return <div key={index}>{course.title}</div>;
+}
+```
+
+**Render Function**
+
+Typically would be calling a child component, but for simplicity in this couse, markup is inline. Recommended way of doing things is to have the markup separately in a child component.
+
+```javascript
+render() {
+  return (
+    <div className="courses-page">
+      <h1>Courses</h1>
+      {this.props.courses.map(this.courseRow)}
+      <h2>Add Course</h2>
+      <input
+        type="text"
+        onChange={this.onTitleChange}
+        value={this.state.course.title} />
+      <input
+        type="submit"
+        value="Save"
+        onClick={this.onClickSave} />
+    </div>
+  );
+}
+```
+
+**Prop Type Validation**
+
+```javascript
+CoursesPage.propTypes = {
+  courses: PropTypes.array.isRequired,
+  actions: PropTypes.object.isRequired
+};
+```
+
+**Redux Connect**
+
+```javascript
+function mapStateToProps(state, ownProps) {
+  return {
+    courses: state.courses
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators(courseActions, dispatch)
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CoursesPage);
+```
+
+Rather than hard-coding action strings, should use constants. [actionTypes](src/actions/actionTypes.js).
