@@ -876,3 +876,31 @@ export default connect(mapStateToProps, mapDispatchToProps)(CoursesPage);
 ```
 
 Rather than hard-coding action strings, should use constants. [actionTypes](src/actions/actionTypes.js).
+
+## Async in Redux
+
+Recommend using a mock api during development, see `src/api/*.js`.
+
+In Redux, actions are synchronous and must return an object. Libraries to handle async in redux:
+
+* redux-thunk: return functions from action creators instead of objects, popular project
+* redux-promise: flux standard actions and promises, but very new project and moving target
+* redux-saga: Uses ES2015 generators and rich domain-specific language
+
+This course will use `redux-thunk`, easier to learn than saga.
+
+Thunk is a function that wraps a function in order to delay its evaluation.
+
+```javascript
+export function deleteAuthor(authorId) {
+  return dispatch => {
+    return AuthorApi.deleteAuthor(authorId).then(() => {
+      dispatch(deletedAuthor(authorId));
+    }).catch(handleError);
+  };
+}
+```
+
+To use redux-thunk, import it in [store configuration](src/store/configureStore.js) module and add it to list of applied middleware.
+
+As part of connecting to the mock api, will refactor [CoursesPage](src/components/course/CoursesPage.js). It's connected to Redux (i.e. a container component), therefore should NOT have any jsx. It also supports both displaying and adding courses, should only do one thing.
