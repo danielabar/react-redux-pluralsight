@@ -904,3 +904,5 @@ export function deleteAuthor(authorId) {
 To use redux-thunk, import it in [store configuration](src/store/configureStore.js) module and add it to list of applied middleware.
 
 As part of connecting to the mock api, will refactor [CoursesPage](src/components/course/CoursesPage.js). It's connected to Redux (i.e. a container component), therefore should NOT have any jsx. It also supports both displaying and adding courses, should only do one thing.
+
+## Async Writes in Redux
