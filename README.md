@@ -41,6 +41,12 @@
   - [Redux Flow](#redux-flow-1)
     - [Container Component Structure](#container-component-structure)
   - [Add Course](#add-course)
+  - [Async in Redux](#async-in-redux)
+  - [Async Writes in Redux](#async-writes-in-redux)
+    - [Create Manage Course Page](#create-manage-course-page)
+    - [Create Manage Course Form](#create-manage-course-form)
+    - [Create Form Input Components](#create-form-input-components)
+    - [Use Course Form](#use-course-form)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -906,3 +912,52 @@ To use redux-thunk, import it in [store configuration](src/store/configureStore.
 As part of connecting to the mock api, will refactor [CoursesPage](src/components/course/CoursesPage.js). It's connected to Redux (i.e. a container component), therefore should NOT have any jsx. It also supports both displaying and adding courses, should only do one thing.
 
 ## Async Writes in Redux
+
+### Create Manage Course Page
+
+Create [ManageCoursePage](src/components/course/ManageCoursePage.js). Whenever a new page is added, update the router to link to it. To land on course page and to edit a specifid course referenced by `id`:
+
+### Create Manage Course Form
+
+Form goes in a separate component [CourseForm](src/components/course/CourseForm.js). Implemented as stateless functional component. Makes use of child components such as `TextInput` and `SelectInput`.
+
+All props are destructured in function's arguments list for make the code concise and the signature clear:
+
+```javascript
+const CourseForm = ({course, allAuthors, onSave, onChange, saving, errors}) => {
+  ...
+};
+```
+
+Prop types defined for validation should mirror the argument list in function:
+
+```javascript
+CourseForm.propTypes = {
+  course: React.PropTypes.object.isRequired,
+  allAuthors: React.PropTypes.array,
+  onSave: React.PropTypes.func.isRequired,
+  onChange: React.PropTypes.func.isRequired,
+  saving: React.PropTypes.bool,
+  errors: React.PropTypes.object
+};
+```
+
+### Create Form Input Components
+
+Re-usable comnponents to handle text and select inputs. Place them in `components/common`.
+
+TextInput and SelectInput wrap bootstrap classes that wrap `<input type="text"...>` and `<select...>` including error handling.
+
+### Use Course Form
+
+Note can only have one top level element in JSX.
+
+Add course form component to manage course page:
+
+```javascript
+<CourseForm course={this.state.course}/>
+```
+
+Just to get started, create empty course in `mapStateToProps` and expose it in state.
+
+Need to pass mutable state to form.
